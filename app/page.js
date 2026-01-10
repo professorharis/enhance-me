@@ -155,7 +155,15 @@ export default function ProfessionalImageStudio() {
     
     try {
       setProcessingProgress('Analyzing image...');
+      
+      // Config object added as requested
+      const config = {
+        publicPath: 'https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/'
+      };
+      
+      // Calling removeBackground with the config
       const blob = await removeBackground(imageFile, {
+        ...config,
         model: 'medium',
         output: { format: 'image/png', quality: 0.95 }
       });
