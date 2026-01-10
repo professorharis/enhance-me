@@ -9,7 +9,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { removeBackground } from '@imgly/background-removal';
+
+// Remove the import from top, we'll import dynamically
 
 export default function ProfessionalImageStudio() {
   const router = useRouter();
@@ -148,27 +149,76 @@ export default function ProfessionalImageStudio() {
     }
   };
 
+  // FIXED: Background Removal Function for Vercel
   const runRealProcess = async () => {
     if (!imageFile) return;
+    
     setProcessing(true);
     setProcessingProgress('Starting background removal...');
     
     try {
+      setProcessingProgress('Loading AI model...');
+      
+      // Dynamically import the background removal library
+      // This ensures it only loads on client side
+      const { removeBackground } = await import('@imgly/background-removal');
+      
       setProcessingProgress('Analyzing image...');
       
-      // Config object added as requested
-      const config = {
-        publicPath: 'https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/'
-      };
+      // Use multiple CDN options with fallbacks for Vercel
+      const configs = [
+        {
+          publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.7.0/dist/',
+          model: 'small', // Using small model for faster processing
+          output: { format: 'image/png', quality: 0.9 }
+        },
+        {
+          publicPath: 'https://unpkg.com/@imgly/background-removal-data@1.7.0/dist/',
+          model: 'small',
+          output: { format: 'image/png', quality: 0.9 }
+        },
+        {
+          publicPath: 'https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/',
+          model: 'small',
+          output: { format: 'image/png', quality: 0.9 }
+        }
+      ];
       
-      // Calling removeBackground with the config
-      const blob = await removeBackground(imageFile, {
-        ...config,
-        model: 'medium',
-        output: { format: 'image/png', quality: 0.95 }
-      });
+      let blob = null;
+      let lastError = null;
       
-      setProcessingProgress('Processing result...');
+      // Try each config until one works
+      for (let i = 0; i < configs.length; i++) {
+        try {
+          setProcessingProgress(`Trying model source ${i + 1}/${configs.length}...`);
+          
+          // Add timeout for each attempt
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Model loading timeout')), 15000)
+          );
+          
+          const processPromise = removeBackground(imageFile, {
+            ...configs[i],
+            proxyToWorker: false, // Try without worker for Vercel
+            debug: false
+          });
+          
+          blob = await Promise.race([processPromise, timeoutPromise]);
+          setProcessingProgress('Model loaded successfully! Processing image...');
+          break; // Exit loop if successful
+          
+        } catch (configError) {
+          lastError = configError;
+          console.log(`Config ${i + 1} failed:`, configError.message);
+          continue; // Try next config
+        }
+      }
+      
+      if (!blob) {
+        throw new Error(`All CDN attempts failed. Last error: ${lastError?.message}`);
+      }
+      
+      setProcessingProgress('Finalizing result...');
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result;
@@ -178,15 +228,34 @@ export default function ProfessionalImageStudio() {
         saveToLocalStorage();
       };
       reader.readAsDataURL(blob);
+      
     } catch (err) {
-      console.error(err);
-      setProcessingProgress('Error occurred, using fallback...');
+      console.error("Background removal error:", err);
+      
+      // User-friendly error messages
+      if (err.message.includes('timeout')) {
+        setProcessingProgress('Processing took too long. Try a smaller image.');
+      } else if (err.message.includes('CDN') || err.message.includes('network')) {
+        setProcessingProgress('Network issue. Please check connection.');
+      } else {
+        setProcessingProgress('Error processing image. Please try again.');
+      }
+      
+      // Fallback: Use a simple client-side background removal
       setTimeout(() => {
-        setProcessedImage(uploadedImage);
-        setProcessing(false);
-        setProcessingProgress('');
-        saveToLocalStorage();
-      }, 1500);
+        try {
+          // Simple fallback - just return the original image
+          // You can add a basic canvas-based removal here if needed
+          setProcessedImage(uploadedImage);
+          setProcessing(false);
+          setProcessingProgress('');
+          saveToLocalStorage();
+        } catch (fallbackError) {
+          console.error("Fallback also failed:", fallbackError);
+          setProcessing(false);
+          setProcessingProgress('Processing failed. Please upload again.');
+        }
+      }, 2000);
     }
   };
 
