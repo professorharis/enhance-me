@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "Smart Image Resizer - Free AI Photo Resize Tool | Enhance Me",
+  description: "Resize images for any platform instantly. AI-powered smart resizing for social media, passports, web banners & more. No cropping, perfect results.",
+  keywords: [
+    'image resizer',
+    'free photo resize',
+    'social media image sizes',
+    'passport photo maker',
+    'web banner resizer',
+    'AI image scaling',
+    'smart resize tool',
+    'Enhance Me resizer',
+    'mobile image resizer',
+    'instagram photo size'
+  ],
+  authors: [{ name: 'Enhance Me' }],
+  creator: 'Enhance Me',
+  publisher: 'Enhance Me',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: 'Smart Image Resizer - Free AI Photo Resize Tool | Enhance Me',
+    description: 'Resize images for any platform instantly. AI-powered smart resizing for social media, passports, web banners & more.',
+    url: 'https://enhanceme.com/resize',
+    siteName: 'Enhance Me',
+    images: [
+      {
+        url: '/og-resize.png',
+        width: 1200,
+        height: 630,
+        alt: 'Enhance Me Smart Image Resizer - Resize for Any Platform',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Smart Image Resizer - Free AI Photo Resize Tool | Enhance Me',
+    description: 'Resize images for any platform instantly. AI-powered smart resizing for social media, passports, web banners & more.',
+    images: ['/twitter-resize.png'],
+    creator: '@enhanceme',
+  },
+  alternates: {
+    canonical: '/resize',
+  },
+  category: 'Image Editing Tools',
+};
