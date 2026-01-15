@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -25,6 +26,8 @@ export const metadata: Metadata = {
     'image processing',
     'online photo editor',
     'transparent background',
+     'passport size image tool',
+     'online passport size for pakistan india free',
     'AI tools'
   ],
   authors: [{ name: 'Enhance Me' }],
