@@ -27,6 +27,21 @@ export default function ProfessionalImageStudio() {
   const [aspectRatio, setAspectRatio] = useState('');
   const [faqOpen, setFaqOpen] = useState(null);
   const [fromTermsPrivacy, setFromTermsPrivacy] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ) || window.innerWidth <= 768;
+      setIsMobile(mobile);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Check sessionStorage when component mounts
   useEffect(() => {
@@ -148,37 +163,200 @@ export default function ProfessionalImageStudio() {
     }
   };
 
+  // Optimize image for mobile processing
+  const optimizeImageForMobile = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Mobile-optimized dimensions
+          const MAX_DIMENSION = 800;
+          
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > height) {
+            if (width > MAX_DIMENSION) {
+              height = Math.round((height * MAX_DIMENSION) / width);
+              width = MAX_DIMENSION;
+            }
+          } else {
+            if (height > MAX_DIMENSION) {
+              width = Math.round((width * MAX_DIMENSION) / height);
+              height = MAX_DIMENSION;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob);
+              } else {
+                reject(new Error('Canvas to blob failed'));
+              }
+            },
+            'image/jpeg',
+            0.8
+          );
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Simple background removal fallback for mobile
+  const simpleBackgroundRemoval = (imageSrc) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Resize for mobile
+        const maxSize = 600;
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const data = imageData.data;
+        
+        // Simple background removal algorithm
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          
+          // Remove white/light backgrounds
+          if (r > 200 && g > 200 && b > 200) {
+            data[i + 3] = 0; // Make transparent
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        const result = canvas.toDataURL('image/png');
+        resolve(result);
+      };
+      img.src = imageSrc;
+    });
+  };
+
+  // FIXED: MOBILE OPTIMIZED PROCESSING
   const runRealProcess = async () => {
     if (!imageFile) return;
-    setProcessing(true);
-    setProcessingProgress('Starting background removal...');
     
-    try {
-      setProcessingProgress('Analyzing image...');
-      const blob = await removeBackground(imageFile, {
-        model: 'medium',
-        output: { format: 'image/png', quality: 0.95 }
-      });
+    setProcessing(true);
+    
+    // MOBILE DEVICE: Use optimized approach
+    if (isMobile) {
+      setProcessingProgress('Optimizing for mobile...');
       
-      setProcessingProgress('Processing result...');
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        setProcessedImage(result);
-        setProcessing(false);
-        setProcessingProgress('');
-        saveToLocalStorage();
-      };
-      reader.readAsDataURL(blob);
-    } catch (err) {
-      console.error(err);
-      setProcessingProgress('Error occurred, using fallback...');
-      setTimeout(() => {
-        setProcessedImage(uploadedImage);
-        setProcessing(false);
-        setProcessingProgress('');
-        saveToLocalStorage();
-      }, 1500);
+      try {
+        // Method 1: Try with optimized image
+        setProcessingProgress('Processing with mobile AI...');
+        
+        const optimizedBlob = await optimizeImageForMobile(imageFile);
+        
+        // Use small model for mobile
+        const blob = await removeBackground(optimizedBlob, {
+          model: 'small', // Small model for mobile
+          output: { 
+            format: 'image/png', 
+            quality: 0.8 // Lower quality for faster processing
+          }
+        });
+        
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProcessedImage(reader.result);
+          setProcessing(false);
+          setProcessingProgress('');
+          saveToLocalStorage();
+        };
+        reader.readAsDataURL(blob);
+        
+      } catch (error) {
+        console.log('Primary method failed, trying fallback...', error);
+        
+        // Method 2: Simple background removal as fallback
+        setProcessingProgress('Using alternative method...');
+        
+        try {
+          const result = await simpleBackgroundRemoval(uploadedImage);
+          setProcessedImage(result);
+          setProcessing(false);
+          setProcessingProgress('');
+          saveToLocalStorage();
+        } catch (fallbackError) {
+          console.log('Fallback also failed, using original...', fallbackError);
+          
+          // Final fallback
+          setTimeout(() => {
+            setProcessedImage(uploadedImage);
+            setProcessing(false);
+            setProcessingProgress('');
+            saveToLocalStorage();
+          }, 1000);
+        }
+      }
+      
+    } else {
+      // DESKTOP DEVICE: Use standard approach
+      setProcessingProgress('Starting background removal...');
+      
+      try {
+        setProcessingProgress('Analyzing image...');
+        const blob = await removeBackground(imageFile, {
+          model: 'medium',
+          output: { format: 'image/png', quality: 0.95 }
+        });
+        
+        setProcessingProgress('Processing result...');
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const result = reader.result;
+          setProcessedImage(result);
+          setProcessing(false);
+          setProcessingProgress('');
+          saveToLocalStorage();
+        };
+        reader.readAsDataURL(blob);
+      } catch (err) {
+        console.error(err);
+        setProcessingProgress('Error occurred, using fallback...');
+        setTimeout(() => {
+          setProcessedImage(uploadedImage);
+          setProcessing(false);
+          setProcessingProgress('');
+          saveToLocalStorage();
+        }, 1500);
+      }
     }
   };
 
