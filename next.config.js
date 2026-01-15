@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Purana saara headers wala code hata den
+images: {
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'i.ibb.co',
+    },
+  ],
+},
 };
 
 export default nextConfig;
