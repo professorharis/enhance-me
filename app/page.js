@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Eraser, Maximize, Layers, Zap, Upload, 
   Download, Sparkles, X, User,
-  LayoutGrid, SlidersHorizontal, RotateCcw, Eye, EyeOff,
-  Menu, ChevronRight, CheckCircle2, ArrowRight, Lock, Info, ShieldCheck, Minimize2, Home, Mail, FileText
+  LayoutGrid, SlidersHorizontal, RotateCcw, Eye, EyeOff, FileMinus,
+  Menu, ChevronRight, CheckCircle2, ArrowRight, Lock, Info, ShieldCheck, Minimize2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -50,7 +50,7 @@ export default function ProfessionalImageStudio() {
             setTimeout(() => {
               sessionStorage.removeItem('imageStudioState');
               setFromTermsPrivacy(false);
-            }, 100);
+            }, 3000);
           } else {
             sessionStorage.removeItem('imageStudioState');
           }
@@ -335,18 +335,16 @@ export default function ProfessionalImageStudio() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900 font-sans overflow-x-hidden">
       
-      {/* NAVBAR - MOBILE OPTIMIZED */}
-      <nav className="h-16 sm:h-20 bg-white border-b border-gray-200 px-4 sm:px-6 md:px-16 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-            <Sparkles size={18} className="sm:size-[22px]" />
+      {/* NAVBAR */}
+      <nav className="h-20 bg-white border-b border-gray-200 px-6 md:px-16 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+            <Sparkles size={22} />
           </div>
-          <Link href="/" className="text-xl sm:text-2xl font-bold tracking-tight no-underline">
-            Enhance Me
-          </Link>
+          <Link href="/" className="text-2xl font-bold tracking-tight no-underline">Enhance Me</Link>
         </div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-gray-500">
           <Link href="/about" className="hover:text-blue-600 transition-colors no-underline">About</Link>
           <Link href="/privacy-policy" className="hover:text-blue-600 transition-colors no-underline">Privacy</Link>
@@ -359,162 +357,95 @@ export default function ProfessionalImageStudio() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-          className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          aria-label="Toggle menu"
-        >
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </nav>
 
-      {/* UPDATED MOBILE MENU - Now with Privacy */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 px-4 py-4 absolute top-16 left-0 right-0 z-40 shadow-xl rounded-b-2xl">
-          <div className="flex flex-col">
-            
-            {/* Home Link */}
-            <Link 
-              href="/" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <Home size={18} />
-              </div>
-              <span className="font-medium">Home</span>
-            </Link>
-            
-            {/* About Link */}
-            <Link 
-              href="/about" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <Info size={18} />
-              </div>
-              <span className="font-medium">About</span>
-            </Link>
-            
-            {/* Privacy Link - NEW */}
-            <Link 
-              href="/privacy-policy" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <ShieldCheck size={18} />
-              </div>
-              <span className="font-medium">Privacy</span>
-            </Link>
-            
-            {/* Contact Link */}
-            <Link 
-              href="/contact" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <Mail size={18} />
-              </div>
-              <span className="font-medium">Contact</span>
-            </Link>
-            
-            {/* Sign In Button with Icon Box */}
-            <Link 
-              href="/signin" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <User size={18} />
-              </div>
-              <span className="font-medium">Sign In</span>
-            </Link>
-          </div>
-        </div>
-      )}
+      {/* Standard Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-b border-gray-200 shadow-lg"
+          >
+            <div className="px-6 py-4 space-y-4">
+              <Link href="/about" className="block text-gray-600 hover:text-blue-600 font-medium no-underline py-2 border-b border-gray-100">About</Link>
+              <Link href="/privacy-policy" className="block text-gray-600 hover:text-blue-600 font-medium no-underline py-2 border-b border-gray-100">Privacy</Link>
+              <Link href="/contact" className="block text-gray-600 hover:text-blue-600 font-medium no-underline py-2 border-b border-gray-100">Contact</Link>
+              <Link href="/faq" className="block text-gray-600 hover:text-blue-600 font-medium no-underline py-2 border-b border-gray-100">FAQ</Link>
+              <button onClick={handleSignIn} className="w-full flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium py-2 text-left">
+                <User size={18} /> Sign In
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* HERO SECTION - MOBILE OPTIMIZED */}
-      <section id="upload-section" className="pt-6 sm:pt-16 pb-4 sm:pb-8 px-4 sm:px-6 md:px-16">
+      {/* HERO SECTION */}
+      <section id="upload-section" className="pt-16 pb-8 px-6 md:px-16">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-6 sm:mb-12">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 sm:mb-6 leading-tight">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               Professional <span className="text-blue-600">Image Studio</span>
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Simple and Fast - Professional AI-powered image tool
             </p>
           </div>
 
-          {/* UPLOAD SECTION - MOBILE OPTIMIZED */}
+          {/* UPLOAD SECTION */}
           <div className="max-w-4xl mx-auto">
-            {/* TOP BUTTONS - SMALLER FOR MOBILE */}
-            <div className="flex flex-wrap gap-2 mb-4 sm:gap-4 mb-6 sm:mb-8 justify-center px-2">
-              <button className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
-                <Eraser size={12} className="sm:size-[18px]" /> Remove Background
+            <div className="flex flex-wrap gap-4 mb-8 justify-center">
+              <button className="px-6 py-3 rounded-xl font-medium text-sm bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg flex items-center gap-2">
+                <Eraser size={18} /> Remove Background
               </button>
-              <button onClick={scrollToTools} className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all flex items-center gap-1.5 sm:gap-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-blue-600">
-                <LayoutGrid size={12} className="sm:size-[18px]" /> More Tools
+              <button onClick={scrollToTools} className="px-6 py-3 rounded-xl font-medium text-sm transition-all flex items-center gap-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-blue-600">
+                <LayoutGrid size={18} /> More Tools
               </button>
             </div>
 
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-3 sm:p-6 md:p-8 mb-6 sm:mb-12">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8 mb-12">
               <AnimatePresence mode="wait">
                 {!uploadedImage ? (
-                  <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center p-4 sm:p-6">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-white mb-4 sm:mb-6 mx-auto">
-                      <Upload size={20} className="sm:size-7" />
+                  <motion.div key="upload" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center p-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white mb-6 mx-auto">
+                      <Upload size={28} />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Upload Your Image</h3>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">Drag & drop or click to browse</p>
-                    <label className="inline-flex items-center gap-2 bg-gray-900 text-white px-5 sm:px-8 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium cursor-pointer hover:bg-gray-800 transition-colors text-xs sm:text-sm">
-                      <Upload size={14} className="sm:size-[18px]" /> Choose File
+                    <h3 className="text-xl font-bold mb-3">Upload Your Image</h3>
+                    <p className="text-gray-500 mb-6">Drag & drop or click to browse</p>
+                    <label className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-3 rounded-xl font-medium cursor-pointer hover:bg-gray-800 transition-colors">
+                      <Upload size={18} /> Choose File
                       <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
                     </label>
                   </motion.div>
                 ) : !processedImage ? (
-                  <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
+                  <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
                           <img src={uploadedImage} alt="Preview" className="w-full h-full object-cover" />
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="font-medium text-sm sm:text-base truncate">{imageName}</div>
-                          <div className="text-xs sm:text-sm text-gray-500">Ready to process</div>
-                          {imageSize.width > 0 && (
-                            <div className="text-xs text-gray-400 mt-0.5">
-                              {imageSize.width}×{imageSize.height}px • {aspectRatio}
-                            </div>
-                          )}
+                        <div className="text-left">
+                          <div className="font-medium truncate max-w-[200px]">{imageName}</div>
+                          <div className="text-sm text-gray-500">Ready to process</div>
+                          {imageSize.width > 0 && <div className="text-xs text-gray-400">{imageSize.width}×{imageSize.height}px • {aspectRatio}</div>}
                         </div>
                       </div>
-                      <button onClick={removeUploadedImage} className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors ml-2 flex-shrink-0">
-                        <X size={16} className="sm:size-5 text-gray-500" />
+                      <button onClick={removeUploadedImage} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <X size={20} className="text-gray-500" />
                       </button>
                     </div>
                     {processingProgress && (
                       <div className="text-center">
-                        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-700 rounded-lg text-xs sm:text-sm">
-                          <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-500 animate-pulse"></div>
-                          <span className="font-medium">{processingProgress}</span>
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg">
+                          <div className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+                          <span className="text-sm font-medium">{processingProgress}</span>
                         </div>
                       </div>
                     )}
-                    <button onClick={runRealProcess} disabled={processing} className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2 sm:gap-3 disabled:opacity-50 text-sm sm:text-base">
-                      {processing ? (
-                        <>
-                          <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <Zap size={16} className="sm:size-5" />
-                          Remove Background Now
-                        </>
-                      )}
+                    <button onClick={runRealProcess} disabled={processing} className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-3 disabled:opacity-50">
+                      {processing ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Processing...</>) : (<><Zap size={20} /> Remove Background Now</>)}
                     </button>
                   </motion.div>
                 ) : (
@@ -523,94 +454,86 @@ export default function ProfessionalImageStudio() {
                     initial={{ opacity: 0, scale: 0.95 }} 
                     animate={{ opacity: 1, scale: 1 }} 
                     exit={{ opacity: 0, scale: 0.95 }} 
-                    className="space-y-4 sm:space-y-6"
+                    className="space-y-6"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-base sm:text-lg font-bold truncate">Background Removed!</h3>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
-                          {imageSize.width > 0 && (
-                            <span className="truncate">
-                              {imageSize.width}×{imageSize.height}px • {aspectRatio}
-                            </span>
-                          )}
+                    {fromTermsPrivacy && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                        <p className="text-green-700 text-sm font-medium flex items-center">
+                          <CheckCircle2 size={16} className="mr-2" />
+                          ✓ Image restored from previous session
                         </p>
                       </div>
-                      <button onClick={removeUploadedImage} className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors text-xs sm:text-sm text-gray-500 ml-2 flex-shrink-0">
-                        <X size={16} className="sm:size-5" />
+                    )}
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-bold">Background Removed!</h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {imageSize.width > 0 && <span className="mr-3">{imageSize.width}×{imageSize.height}px • {aspectRatio}</span>}
+                        </p>
+                      </div>
+                      <button onClick={removeUploadedImage} className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-sm text-gray-500">
+                        <X size={18} />
                       </button>
                     </div>
 
-                    {/* DYNAMIC IMAGE CONTAINER - MOBILE OPTIMIZED */}
-                    <div className="relative w-full flex justify-center bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
+                    {/* DYNAMIC IMAGE CONTAINER - FIXED FOR ASPECT RATIO */}
+                    <div className="relative w-full flex justify-center bg-gray-50 rounded-xl p-4">
                       <div 
                         className="relative rounded-lg overflow-hidden border-2 border-green-200 bg-checkerboard shadow-sm"
                         style={{
-                          aspectRatio: imageSize.width && imageSize.height ? `${imageSize.width} / ${imageSize.height}` : 'auto',
-                          maxHeight: '45vh',
-                          maxWidth: '100%'
+                           aspectRatio: imageSize.width && imageSize.height ? `${imageSize.width} / ${imageSize.height}` : 'auto',
+                           maxHeight: '60vh',
+                           maxWidth: '100%'
                         }}
                       >
-                         <img 
-                           src={showOriginal ? uploadedImage : processedImage} 
-                           alt="Result" 
-                           className="w-full h-full object-contain block" 
-                         />
+                         <img src={showOriginal ? uploadedImage : processedImage} alt="Result" className="w-full h-full object-contain block" />
                           
-                          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col items-end gap-1 sm:gap-2 z-10">
-                            <button 
-                              onClick={handleEyeToggle} 
-                              className={`p-1.5 sm:p-2 rounded-full shadow-lg transition-all flex items-center gap-1 ${
-                                showOriginal ? 'bg-blue-600 text-white' : 'bg-green-600 text-white'
-                              }`}
-                              aria-label={showOriginal ? "Show transparent" : "Show original"}
-                            >
-                              {showOriginal ? <EyeOff size={12} className="sm:size-[18px]" /> : <Eye size={12} className="sm:size-[18px]" />}
+                          <div className="absolute top-3 right-3 flex flex-col items-end gap-2 z-10">
+                            <button onClick={handleEyeToggle} className={`p-2 rounded-full shadow-lg transition-all flex items-center gap-2 ${showOriginal ? 'bg-blue-600 text-white' : 'bg-green-600 text-white'}`}>
+                              {showOriginal ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
-                            <div className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-bold shadow-sm ${
-                              showOriginal ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-                            }`}>
+                            <div className={`px-2 py-1 rounded text-xs font-bold shadow-sm ${showOriginal ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
                               {showOriginal ? "ORIGINAL" : "TRANSPARENT"}
                             </div>
                           </div>
                       </div>
                     </div>
 
-                    {/* COMPACT TERMS & PRIVACY LINE - Mobile optimized */}
-                    <div className="text-center py-2 border-gray-200">
-                      <p className="text-[10px] sm:text-xs text-gray-500 leading-tight whitespace-nowrap">
+                    {/* TERMS & PRIVACY LINE - IMAGE KE NEECHE */}
+                    <div className="text-center py-3 border-y border-gray-200 my-4">
+                      <p className="text-xs text-gray-500">
                         By using our service, you agree to our{' '}
                         <button 
                           onClick={() => handleTermsPrivacyClick('terms')}
-                          className="text-blue-600 hover:underline font-medium bg-transparent border-none cursor-pointer p-0 text-[10px] sm:text-xs"
+                          className="text-blue-600 hover:underline font-medium bg-transparent border-none cursor-pointer p-0 text-xs"
                         >
-                          Terms
+                          Terms of Service
                         </button>{' '}
                         and{' '}
                         <button 
                           onClick={() => handleTermsPrivacyClick('privacy')}
-                          className="text-blue-600 hover:underline font-medium bg-transparent border-none cursor-pointer p-0 text-[10px] sm:text-xs"
+                          className="text-blue-600 hover:underline font-medium bg-transparent border-none cursor-pointer p-0 text-xs"
                         >
-                          Privacy
+                          Privacy Policy
                         </button>
                       </p>
                     </div>
 
-                    {/* BUTTONS - SAME SIZE, FULL TEXT */}
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
                       <button onClick={() => {
                         const link = document.createElement('a');
                         link.href = processedImage;
                         link.download = `transparent-bg-${imageName.split('.')[0] || 'image'}.png`;
                         link.click();
-                      }} className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-2 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium hover:shadow-md transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                        <Download size={14} className="sm:size-[18px]" /> Download
+                      }} className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg font-medium hover:shadow-md transition-all flex items-center justify-center gap-2">
+                        <Download size={18} /> Download
                       </button>
-                      <button onClick={() => setProcessedImage(null)} className="bg-gray-100 text-gray-700 px-2 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium hover:bg-gray-200 transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                        <RotateCcw size={14} className="sm:size-[18px]" /> New
+                      <button onClick={() => setProcessedImage(null)} className="bg-gray-100 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
+                        <RotateCcw size={18} /> New Image
                       </button>
-                      <button onClick={handleEditImage} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 sm:px-4 py-2.5 sm:py-3 rounded-lg font-medium hover:shadow-md transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm">
-                        <SlidersHorizontal size={14} className="sm:size-[18px]" /> Edit
+                      <button onClick={handleEditImage} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-medium hover:shadow-md transition-all flex items-center justify-center gap-2">
+                        <SlidersHorizontal size={18} /> Edit in Studio
                       </button>
                     </div>
                   </motion.div>
@@ -621,65 +544,60 @@ export default function ProfessionalImageStudio() {
         </div>
       </section>
 
-      {/* BACKGROUND REMOVAL PREVIEW SECTION - MOBILE OPTIMIZED */}
-      <section id="preview-section" className="px-4 sm:px-6 md:px-16 py-6 sm:py-12">
+      {/* BACKGROUND REMOVAL PREVIEW SECTION */}
+      <section id="preview-section" className="px-6 md:px-16 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 xl:gap-20 items-center">
-            <div className="space-y-4 sm:space-y-6 w-full lg:w-1/2">
-              <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-green-50 text-green-700 rounded-full font-medium text-xs sm:text-sm">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
-                  <Eraser size={12} className="sm:size-4" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-3 px-4 py-2 bg-green-50 text-green-700 rounded-full font-medium">
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white">
+                  <Eraser size={16} />
                 </div>
                 AI Background Removal
               </div>
-              
-              {/* ONE LINE HEADING FOR MOBILE */}
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
-                Remove <span className="text-green-600">Background</span> in Seconds
+              <h2 className="text-4xl font-bold tracking-tight">
+                Remove <span className="text-green-600">Background</span>{' '}
+                in Seconds
               </h2>
-              
-              <p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-600 leading-relaxed">
                 Our AI instantly removes backgrounds while keeping your subject perfectly sharp.
               </p>
               
-              <div className="space-y-2 sm:space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 size={12} className="sm:size-3 text-white" />
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <CheckCircle2 size={14} className="text-white" />
                   </div>
-                  <span className="font-medium text-sm sm:text-base">100% automatic - No manual editing</span>
+                  <span className="font-medium">100% automatic - No manual editing</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 size={12} className="sm:size-3 text-white" />
+                <div className="flex items-center gap-4">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <CheckCircle2 size={14} className="text-white" />
                   </div>
-                  <span className="font-medium text-sm sm:text-base">Perfect edge detection</span>
+                  <span className="font-medium">Perfect edge detection</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 size={12} className="sm:size-3 text-white" />
+                <div className="flex items-center gap-4">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                    <CheckCircle2 size={14} className="text-white" />
                   </div>
-                  <span className="font-medium text-sm sm:text-base">Transparent PNG export</span>
+                  <span className="font-medium">Transparent PNG export</span>
                 </div>
               </div>
             </div>
 
-            {/* PREVIEW IMAGE - SMALLER FOR MOBILE */}
-            <div className="relative w-full lg:w-1/2">
-              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-2 sm:p-4">
-                <div className="flex items-center justify-between mb-2 sm:mb-4 px-1 sm:px-4 pt-0 sm:pt-2">
-                  <h3 className="text-sm sm:text-lg font-bold flex items-center gap-1.5 sm:gap-2">
-                    <SlidersHorizontal size={12} className="sm:size-[18px] text-green-500"/>
-                    <span className="hidden sm:inline">Interactive Preview</span>
-                    <span className="sm:hidden">Preview</span>
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-2">
+                <div className="flex items-center justify-between mb-4 px-4 pt-2">
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <SlidersHorizontal size={18} className="text-green-500"/>
+                    Interactive Preview
                   </h3>
-                  <div className="text-[9px] sm:text-xs font-semibold bg-gray-100 px-1.5 sm:px-3 py-0.5 rounded-full text-gray-500">
-                    DRAG
+                  <div className="text-xs font-semibold bg-gray-100 px-3 py-1 rounded-full text-gray-500">
+                    DRAG SLIDER
                   </div>
                 </div>
                 
-                {/* SMALLER IMAGE CONTAINER FOR MOBILE */}
-                <div className="relative h-[180px] sm:h-[250px] md:h-[300px] lg:h-[350px] rounded-lg sm:rounded-xl overflow-hidden cursor-ew-resize">
+                <div className="relative h-[350px] rounded-xl overflow-hidden cursor-ew-resize">
                   <ImageComparisonSlider
                     beforeImage="https://i.ibb.co/PZwPNGgz/medium-shot-woman-with-glasses-outdoors.jpg"
                     afterImage="https://i.ibb.co/4nYJRQFY/medium-shot-woman-with-glasses-outdoors-removebg-preview.png"
@@ -691,42 +609,42 @@ export default function ProfessionalImageStudio() {
         </div>
       </section>
 
-      {/* TOOLS SECTION - MOBILE OPTIMIZED */}
-      <section id="more-tools-section" className="px-4 sm:px-6 md:px-16 py-8 sm:py-16 bg-gray-50 border-y">
+      {/* TOOLS SECTION */}
+      <section id="more-tools-section" className="px-6 md:px-16 py-16 bg-gray-50 border-y">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-3 sm:mb-4 uppercase">
+          <h2 className="text-4xl font-bold tracking-tight mb-4 uppercase">
             Discover More <span className="text-blue-600">Tools</span>
           </h2>
           
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-12 max-w-2xl mx-auto px-4">
+          <p className="text-lg text-gray-600 mb-16 max-w-2xl mx-auto">
             Professional-grade tools for all your image editing needs
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8 text-left px-2 sm:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
             <OriginalToolCard 
               href="/resize" 
-              icon={<Maximize size={18} className="sm:size-6"/>} 
+              icon={<Maximize size={24}/>} 
               title="Smart Resize" 
               desc="Neural scaling for all platforms." 
               color="bg-blue-600" 
             />
             <OriginalToolCard 
               href="/compress" 
-              icon={<Minimize2 size={18} className="sm:size-6"/>} 
+              icon={<Minimize2 size={24}/>} 
               title="Smart Compress" 
               desc="Reduce image size without losing quality." 
               color="bg-green-600"
             />
             <OriginalToolCard 
               href="/convert" 
-              icon={<Layers size={18} className="sm:size-6"/>} 
+              icon={<Layers size={24}/>} 
               title="Format Engine" 
               desc="Image & Doc to PDF conversion." 
               color="bg-orange-600" 
             />
             <OriginalToolCard 
               href="/privacy" 
-              icon={<ShieldCheck size={18} className="sm:size-6"/>} 
+              icon={<ShieldCheck size={24}/>} 
               title="Privacy Guard" 
               desc="Scrub hidden EXIF metadata." 
               color="bg-black" 
@@ -735,61 +653,61 @@ export default function ProfessionalImageStudio() {
         </div>
       </section>
 
-      {/* Why Choose Our Tool Section - MOBILE OPTIMIZED */}
-      <section className="px-4 sm:px-6 md:px-16 py-6 sm:py-12">
+      {/* Why Choose Our Tool Section */}
+      <section className="px-6 md:px-16 py-12">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-6 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-6">Why Choose Our Tool</h2>
-            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto px-4">Simple, fast, and professional</p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-6">Why Choose Our Tool</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Simple, fast, and professional</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 md:gap-8">
-            <div className="bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white mb-3 sm:mb-4 md:mb-6">
-                <Zap size={14} className="sm:size-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-white mb-6">
+                <Zap size={24} />
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-4">Lightning Fast</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Process images in seconds with optimized AI algorithms.</p>
+              <h3 className="text-xl font-bold mb-4">Lightning Fast</h3>
+              <p className="text-gray-600">Process images in seconds with optimized AI algorithms.</p>
             </div>
             
-            <div className="bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white mb-3 sm:mb-4 md:mb-6">
-                <Lock size={14} className="sm:size-5" />
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white mb-6">
+                <Lock size={24} />
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-4">Privacy First</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Your images are processed locally and never stored.</p>
+              <h3 className="text-xl font-bold mb-4">Privacy First</h3>
+              <p className="text-gray-600">Your images are processed locally and never stored.</p>
             </div>
             
-            <div className="bg-white p-3 sm:p-6 md:p-8 rounded-lg sm:rounded-xl lg:rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white mb-3 sm:mb-4 md:mb-6">
-                <Info size={14} className="sm:size-5" />
+            <div className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center text-white mb-6">
+                <Info size={24} />
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-4">No Limits</h3>
-              <p className="text-xs sm:text-sm text-gray-600">Free tier with unlimited processing. No watermarks.</p>
+              <h3 className="text-xl font-bold mb-4">No Limits</h3>
+              <p className="text-gray-600">Free tier with unlimited processing. No watermarks.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FAQ SECTION - MOBILE OPTIMIZED */}
-      <section className="px-4 sm:px-6 md:px-16 py-6 sm:py-12 md:py-16">
+      {/* FAQ SECTION */}
+      <section className="px-6 md:px-16 py-16">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-4 sm:mb-8">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-6">Frequently Asked Questions</h2>
-            <p className="text-sm sm:text-base text-gray-600">Get answers to common questions about our tool</p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-6">Frequently Asked Questions</h2>
+            <p className="text-gray-600">Get answers to common questions about our tool</p>
           </div>
 
-          <div className="space-y-2 sm:space-y-4">
+          <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-lg sm:rounded-xl border border-gray-200 overflow-hidden">
+              <div key={index} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <button
-                  className="w-full px-3 sm:px-6 py-2.5 sm:py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
                   onClick={() => setFaqOpen(faqOpen === index ? null : index)}
                 >
-                  <span className="font-medium text-sm sm:text-base lg:text-lg pr-4">{faq.question}</span>
+                  <span className="font-medium text-lg">{faq.question}</span>
                   <ChevronRight 
-                    size={14} 
-                    className={`transition-transform flex-shrink-0 ${faqOpen === index ? 'rotate-90' : ''}`}
+                    size={20} 
+                    className={`transition-transform ${faqOpen === index ? 'rotate-90' : ''}`}
                   />
                 </button>
                 
@@ -801,7 +719,7 @@ export default function ProfessionalImageStudio() {
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-3 sm:px-6 py-2.5 sm:py-4 border-t border-gray-100 text-gray-600 text-xs sm:text-sm md:text-base">
+                      <div className="px-6 py-4 border-t border-gray-100 text-gray-600">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -813,90 +731,90 @@ export default function ProfessionalImageStudio() {
         </div>
       </section>
 
-      {/* CTA SECTION - SMALLER FOR MOBILE */}
-      <section className="px-4 sm:px-6 md:px-16 py-6 sm:py-12 md:py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 md:p-8 text-center shadow-lg sm:shadow-xl lg:shadow-2xl border border-blue-500">
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-3 sm:mb-6 text-white">
+      {/*  CTA SECTION */}
+      <section className="px-6 md:px-16 py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-center shadow-2xl border border-blue-500">
+          <h2 className="text-3xl font-bold mb-6 text-white">
             Professional Image Processing
           </h2>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-blue-100 mb-4 sm:mb-6 md:mb-8 max-w-2xl mx-auto px-2">
+          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
             Experience industry-leading background removal technology
           </p>
           <button 
-            className="inline-flex items-center gap-2 sm:gap-3 bg-white text-blue-700 px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold hover:bg-blue-50 transition-all hover:scale-105 shadow-lg text-xs sm:text-sm md:text-base"
+            className="inline-flex items-center gap-3 bg-white text-blue-700 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all hover:scale-105 shadow-lg"
             disabled
           >
-            <Sparkles size={14} className="sm:size-5 text-blue-600" />
-            Professional Edition
+            <Sparkles size={22} className="text-blue-600" />
+            Professional Edition Available
           </button>
-          <p className="text-xs text-blue-200 mt-3 sm:mt-4 md:mt-6">
+          <p className="text-sm text-blue-200 mt-6">
             Advanced features for enterprise workflows
           </p>
         </div>
       </section>
 
-      {/* Footer - EXACTLY LIKE RESIZE TOOL */}
-      <footer className="bg-gray-900 text-white py-8 sm:py-12 px-4 sm:px-6">
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             {/* Brand */}
-            <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <Link href="/" className="flex items-center gap-2 sm:gap-3 no-underline">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Sparkles size={18} className="sm:size-[22px]" />
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <Link href="/" className="flex items-center gap-3 no-underline">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <Sparkles size={22} />
                   </div>
-                  <span className="text-xl sm:text-2xl font-bold">Enhance Me</span>
+                  <span className="text-2xl font-bold">Enhance Me</span>
                 </Link>
               </div>
-              <p className="text-gray-400 text-xs sm:text-sm">
+              <p className="text-gray-400 text-sm">
                 Simple and Fast Image Tool
               </p>
             </div>
 
             {/* Company Links */}
             <div>
-              <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">Company</h4>
-              <div className="flex flex-col gap-1.5 sm:gap-2">
-                <Link href="/about" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">About</Link>
-                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Privacy</Link>
-                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Contact</Link>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Terms</Link>
-                <Link href="/faq" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">FAQ</Link>
+              <h4 className="text-white font-bold mb-4 text-lg">Company</h4>
+              <div className="flex flex-col gap-2">
+                <Link href="/about" className="text-gray-400 hover:text-white transition-colors no-underline">About</Link>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors no-underline">Privacy</Link>
+                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors no-underline">Contact</Link>
+                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors no-underline">Terms</Link>
+                <Link href="/faq" className="text-gray-400 hover:text-white transition-colors no-underline">FAQ</Link>
               </div>
             </div>
 
             {/* Popular Tools */}
             <div>
-              <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">Popular Tools</h4>
-              <div className="flex flex-col gap-1.5 sm:gap-2">
+              <h4 className="text-white font-bold mb-4 text-lg">Popular Tools</h4>
+              <div className="flex flex-col gap-2">
                 <button 
                   onClick={scrollToUpload}
-                  className="text-gray-400 hover:text-white transition-colors text-left no-underline text-xs sm:text-sm"
+                  className="text-gray-400 hover:text-white transition-colors text-left no-underline"
                 >
                   Remove Background
                 </button>
-                <Link href="/resize" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Smart Resize</Link>
-                <Link href="/convert" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Format Engine</Link>
+                <Link href="/resize" className="text-gray-400 hover:text-white transition-colors no-underline">Smart Resize</Link>
+                <Link href="/convert" className="text-gray-400 hover:text-white transition-colors no-underline">Format Engine</Link>
               </div>
             </div>
 
             {/* More Tools */}
-            <div className="col-span-2 md:col-span-1">
-              <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">More Tools</h4>
-              <div className="flex flex-col gap-1.5 sm:gap-2">
-                <Link href="/compress" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Smart Compress</Link>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Privacy Guard</Link>
+            <div>
+              <h4 className="text-white font-bold mb-4 text-lg">More Tools</h4>
+              <div className="flex flex-col gap-2">
+                <Link href="/compress" className="text-gray-400 hover:text-white transition-colors no-underline">Smart Compress</Link>
+                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors no-underline">Privacy Guard</Link>
               </div>
             </div>
           </div>
 
           {/* Footer Bottom */}
-          <div className="border-t border-gray-800 pt-6 sm:pt-8 text-center">
-            <p className="text-gray-500 text-xs sm:text-sm">
+          <div className="border-t border-gray-800 pt-8 text-center">
+            <p className="text-gray-500 text-sm">
               All rights reserved. Enhance Me © {new Date().getFullYear()}
             </p>
-            <p className="text-gray-600 text-xs mt-1 sm:mt-2">
+            <p className="text-gray-600 text-xs mt-2">
               AI-powered image processing platform
             </p>
           </div>
@@ -906,7 +824,6 @@ export default function ProfessionalImageStudio() {
   );
 }
 
-// Mobile-optimized ImageComparisonSlider component
 function ImageComparisonSlider({ beforeImage, afterImage }) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -1001,7 +918,7 @@ function ImageComparisonSlider({ beforeImage, afterImage }) {
           className="absolute inset-0 w-full h-full object-cover"
           alt="After"
         />
-        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 md:top-4 md:right-4 bg-blue-600/80 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1 rounded text-xs font-bold">
+        <div className="absolute top-4 right-4 bg-blue-600/80 text-white px-3 py-1 rounded-md text-xs font-bold">
           AFTER
         </div>
       </div>
@@ -1019,52 +936,51 @@ function ImageComparisonSlider({ beforeImage, afterImage }) {
           }}
           alt="Before"
         />
-        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 md:top-4 md:left-4 bg-black/70 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1 rounded text-xs font-bold">
+        <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-md text-xs font-bold">
           BEFORE
         </div>
       </div>
 
       <div 
         ref={sliderRef}
-        className="absolute top-0 bottom-0 w-0.5 sm:w-1 bg-white cursor-ew-resize shadow-[0_0_20px_rgba(0,0,0,0.8)] z-30"
+        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize shadow-[0_0_20px_rgba(0,0,0,0.8)] z-30"
         style={{ left: `${sliderPosition}%` }}
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-lg sm:shadow-xl md:shadow-2xl text-gray-700 border-2 border-gray-300 hover:scale-110 transition-transform">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-2xl text-gray-700 border-2 border-gray-300 hover:scale-110 transition-transform">
           <div className="flex items-center">
-            <div className="w-0.5 h-1.5 sm:h-2 md:h-3 bg-gray-400 mx-0.5 rounded-sm"></div>
-            <div className="w-0.5 h-2 sm:h-3 md:h-5 bg-gray-400 mx-0.5 rounded-sm"></div>
-            <div className="w-0.5 h-1.5 sm:h-2 md:h-3 bg-gray-400 mx-0.5 rounded-sm"></div>
+            <div className="w-1 h-3 bg-gray-400 mx-0.5 rounded-sm"></div>
+            <div className="w-1 h-5 bg-gray-400 mx-0.5 rounded-sm"></div>
+            <div className="w-1 h-3 bg-gray-400 mx-0.5 rounded-sm"></div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-2 sm:bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs px-2 py-0.5 sm:px-3 sm:py-1 md:px-5 md:py-2 rounded-full pointer-events-none flex items-center gap-1.5 sm:gap-2 md:gap-3">
-        <span className="text-gray-300 text-xs">Before</span>
-        <span className="font-bold text-xs sm:text-sm">{Math.round(sliderPosition)}%</span>
-        <span className="text-gray-300 text-xs">After</span>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm px-5 py-2 rounded-full pointer-events-none flex items-center gap-3">
+        <span className="text-gray-300">Before</span>
+        <span className="font-bold">{Math.round(sliderPosition)}%</span>
+        <span className="text-gray-300">After</span>
       </div>
 
-      <div className="absolute bottom-8 sm:bottom-10 md:bottom-12 left-1/2 -translate-x-1/2 text-white text-[9px] sm:text-xs bg-black/50 px-2 py-0.5 sm:px-3 sm:py-1 md:px-4 md:py-1 rounded-full">
-        ← Drag slider →
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white text-xs bg-black/50 px-4 py-1 rounded-full">
+        ← Drag slider to compare →
       </div>
     </div>
   );
 }
 
-// Mobile-optimized OriginalToolCard
 function OriginalToolCard({ href, icon, title, desc, color }) {
   const card = (
-    <div className="bg-white p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-[40px] border border-gray-200 hover:shadow-lg sm:hover:shadow-xl transition-all group flex flex-col h-full cursor-pointer">
-      <div className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 ${color} rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center text-white mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform`}>
+    <div className="bg-white p-8 rounded-[40px] border border-gray-200 hover:shadow-2xl transition-all group flex flex-col h-full cursor-pointer">
+      <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}>
         {icon}
       </div>
-      <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1.5 sm:mb-2 md:mb-3 uppercase tracking-tight">{title}</h3>
-      <p className="text-xs sm:text-sm text-gray-500 leading-relaxed mb-3 sm:mb-4 md:mb-6 flex-1">{desc}</p>
+      <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">{title}</h3>
+      <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">{desc}</p>
       <div className="flex items-center text-blue-600 font-bold text-xs uppercase tracking-widest">
         Try Module 
-        <ArrowRight size={10} className="sm:size-3 md:size-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
+        <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
       </div>
     </div>
   );
@@ -1076,7 +992,7 @@ function OriginalToolCard({ href, icon, title, desc, color }) {
   ) : card;
 }
 
-// Add checkerboard styles
+// Add styles to head
 if (typeof document !== 'undefined') {
   const styleSheet = document.createElement("style");
   styleSheet.textContent = `
@@ -1090,15 +1006,6 @@ if (typeof document !== 'undefined') {
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
       background-color: #ffffff;
     }
-    
-    /* Hide scrollbar for mobile horizontal scroll */
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
   `;
   document.head.appendChild(styleSheet);
-}
+}   
