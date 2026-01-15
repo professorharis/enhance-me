@@ -279,7 +279,7 @@ export default function ProfessionalImageStudio() {
       
       try {
         // Method 1: Try with optimized image
-        setProcessingProgress('Processing with mobile AI...');
+        setProcessingProgress('AI is working...');
         
         const optimizedBlob = await optimizeImageForMobile(imageFile);
         
