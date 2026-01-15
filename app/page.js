@@ -859,8 +859,8 @@ export default function ProfessionalImageStudio() {
                 {/* SMALLER IMAGE CONTAINER FOR MOBILE */}
                 <div className="relative h-[180px] sm:h-[250px] md:h-[300px] lg:h-[350px] rounded-lg sm:rounded-xl overflow-hidden cursor-ew-resize">
                   <ImageComparisonSlider
-                    beforeImage="https://i.ibb.co/PZwPNGgz/medium-shot-woman-with-glasses-outdoors.jpg"
-                    afterImage="https://i.ibb.co/4nYJRQFY/medium-shot-woman-with-glasses-outdoors-removebg-preview.png"
+                    beforeImage="https://i.ibb.co/dwKsb3BC/medium-shot-woman-with-glasses-outdoors.jpg"
+                     afterImage="https://i.ibb.co/zH20Fww5/after-jpg.png"
                   />
                 </div>
               </div>
