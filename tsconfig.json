@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "app/api/remove-bg/route.js", "next.config.js", "app/crop/page.js", "app/page.js"  ],
   "exclude": ["node_modules"]
 }
