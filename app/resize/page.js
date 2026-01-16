@@ -20,7 +20,7 @@ export default function SmartResize() {
   const [selectedPreset, setSelectedPreset] = useState('instagram');
   const [customWidth, setCustomWidth] = useState(1080);
   const [customHeight, setCustomHeight] = useState(1080);
-  const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
+  const [maintainAspectRatio, setMaintainAspectRatio] = useState(false); // Default false for passport
   const [originalDimensions, setOriginalDimensions] = useState({ width: 0, height: 0 });
   const [resizeError, setResizeError] = useState('');
   const [quality, setQuality] = useState(90);
@@ -86,6 +86,46 @@ export default function SmartResize() {
     }
   };
 
+  // Fixed: Get current dimensions function
+  const getCurrentDimensions = () => {
+    if (selectedPreset === 'custom') {
+      return { width: customWidth, height: customHeight };
+    }
+    
+    // Handle passport with country selection
+    if (selectedPreset === 'passport') {
+      if (showPassportCountries) {
+        const countrySize = passportSizes.find(p => p.code === selectedCountry);
+        return countrySize ? countrySize.dimensions : { width: 600, height: 600 };
+      }
+      // Default passport size when no country selected
+      return { width: 600, height: 600 };
+    }
+    
+    // Handle other presets
+    let foundPreset;
+    Object.values(presets).forEach(category => {
+      const preset = category.find(p => p.id === selectedPreset);
+      if (preset) foundPreset = preset;
+    });
+    
+    return foundPreset ? foundPreset.dimensions : { width: 1080, height: 1080 };
+  };
+
+  const updateScaleDirection = (originalWidth, originalHeight) => {
+    const target = getCurrentDimensions();
+    const originalArea = originalWidth * originalHeight;
+    const targetArea = target.width * target.height;
+    
+    if (targetArea > originalArea * 1.1) {
+      setScaleDirection('increase');
+    } else if (targetArea < originalArea * 0.9) {
+      setScaleDirection('decrease');
+    } else {
+      setScaleDirection('same');
+    }
+  };
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -118,39 +158,7 @@ export default function SmartResize() {
     }
   };
 
-  const getCurrentDimensions = () => {
-    if (selectedPreset === 'custom') {
-      return { width: customWidth, height: customHeight };
-    }
-    
-    if (selectedPreset === 'passport' && showPassportCountries) {
-      const countrySize = passportSizes.find(p => p.code === selectedCountry);
-      return countrySize ? countrySize.dimensions : { width: 600, height: 600 };
-    }
-    
-    let foundPreset;
-    Object.values(presets).forEach(category => {
-      const preset = category.find(p => p.id === selectedPreset);
-      if (preset) foundPreset = preset;
-    });
-    
-    return foundPreset ? foundPreset.dimensions : { width: 1080, height: 1080 };
-  };
-
-  const updateScaleDirection = (originalWidth, originalHeight) => {
-    const target = getCurrentDimensions();
-    const originalArea = originalWidth * originalHeight;
-    const targetArea = target.width * target.height;
-    
-    if (targetArea > originalArea * 1.1) {
-      setScaleDirection('increase');
-    } else if (targetArea < originalArea * 0.9) {
-      setScaleDirection('decrease');
-    } else {
-      setScaleDirection('same');
-    }
-  };
-
+  // Fixed: Resize image function - پاسپورٹ کے لیے خاص لاگو
   const resizeImage = () => {
     if (!uploadedImage || !imageFile) return;
 
@@ -167,31 +175,76 @@ export default function SmartResize() {
         let targetWidth = targetDimensions.width;
         let targetHeight = targetDimensions.height;
 
+        console.log('Original dimensions:', img.width, img.height);
+        console.log('Target dimensions:', targetWidth, targetHeight);
+        console.log('Selected preset:', selectedPreset);
+        console.log('Maintain aspect ratio:', maintainAspectRatio);
+
         updateScaleDirection(img.width, img.height);
 
-        if (maintainAspectRatio && selectedPreset === 'custom') {
-          const aspectRatio = originalDimensions.width / originalDimensions.height;
-          if (targetWidth / targetHeight > aspectRatio) {
-            targetWidth = targetHeight * aspectRatio;
+        // پاسپورٹ کے لیے خاص - اگر aspect ratio maintain کرنا ہے تو
+        if (maintainAspectRatio) {
+          const aspectRatio = img.width / img.height;
+          const targetAspectRatio = targetWidth / targetHeight;
+          
+          if (Math.abs(aspectRatio - targetAspectRatio) > 0.1) {
+            // Aspect ratio مختلف ہے - ہم canvas کو target size پر رکھیں گے اور image کو fit کریں گے
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            
+            // White background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+            
+            // Calculate dimensions to fit within canvas while maintaining aspect ratio
+            let drawWidth, drawHeight, offsetX, offsetY;
+            
+            if (aspectRatio > targetAspectRatio) {
+              // Image is wider than target
+              drawWidth = targetWidth;
+              drawHeight = targetWidth / aspectRatio;
+              offsetX = 0;
+              offsetY = (targetHeight - drawHeight) / 2;
+            } else {
+              // Image is taller than target
+              drawHeight = targetHeight;
+              drawWidth = targetHeight * aspectRatio;
+              offsetX = (targetWidth - drawWidth) / 2;
+              offsetY = 0;
+            }
+            
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
           } else {
-            targetHeight = targetWidth / aspectRatio;
+            // Aspect ratio تقریباً ایک جیسا ہے - direct resize
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
           }
+        } else {
+          // Direct resize - بغیر aspect ratio maintain کیے
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+          
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, targetWidth, targetHeight);
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
         }
-
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, targetWidth, targetHeight);
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
         const resizedDataUrl = canvas.toDataURL('image/jpeg', quality / 100);
         setResizedImage(resizedDataUrl);
         setViewMode('results'); // Switch to results view
         preventAutoScroll();
       } catch (error) {
+        console.error('Resize error:', error);
         setResizeError('Failed to resize image. Please try again.');
       } finally {
         setProcessing(false);
@@ -200,13 +253,22 @@ export default function SmartResize() {
     img.src = uploadedImage;
   };
 
+  // Fixed: Handle preset selection
   const handlePresetSelect = (presetId) => {
     setSelectedPreset(presetId);
     
     if (presetId === 'passport') {
       setShowPassportCountries(true);
-      setCustomWidth(600);
-      setCustomHeight(600);
+      const countrySize = passportSizes.find(p => p.code === selectedCountry);
+      if (countrySize) {
+        setCustomWidth(countrySize.dimensions.width);
+        setCustomHeight(countrySize.dimensions.height);
+      } else {
+        setCustomWidth(600);
+        setCustomHeight(600);
+      }
+      // پاسپورٹ کے لیے default میں aspect ratio off کریں
+      setMaintainAspectRatio(false);
     } else {
       setShowPassportCountries(false);
       let foundPreset;
@@ -218,6 +280,8 @@ export default function SmartResize() {
           setCustomHeight(preset.dimensions.height);
         }
       });
+      // دوسرے presets کے لیے aspect ratio on کریں
+      setMaintainAspectRatio(true);
     }
     
     if (uploadedImage) {
@@ -225,8 +289,10 @@ export default function SmartResize() {
     }
   };
 
+  // Fixed: Handle country selection
   const handleCountrySelect = (countryCode) => {
     setSelectedCountry(countryCode);
+    setSelectedPreset('passport'); // Ensure preset is set to passport
     const countrySize = passportSizes.find(p => p.code === countryCode);
     if (countrySize) {
       setCustomWidth(countrySize.dimensions.width);
@@ -334,7 +400,7 @@ export default function SmartResize() {
   const scaleInfo = getScaleInfo();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white text-gray-900 font-sans">
       
       {/* NAVBAR - MOBILE OPTIMIZED */}
       <nav className="h-16 sm:h-20 bg-white border-b border-gray-200 px-4 sm:px-6 md:px-16 flex items-center justify-between sticky top-0 z-50">
@@ -347,7 +413,7 @@ export default function SmartResize() {
           </Link>
         </div>
 
-        {/* Desktop Navigation - UNCHANGED */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-gray-500">
           <Link href="/" className="hover:text-orange-600 transition-colors no-underline">Home</Link>
           <Link href="/about" className="hover:text-orange-600 transition-colors no-underline">About</Link>
@@ -371,7 +437,7 @@ export default function SmartResize() {
         </button>
       </nav>
 
-      {/* UPDATED MOBILE MENU - Simple & Clean */}
+      {/* MOBILE MENU */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 px-4 py-4 absolute top-16 left-0 right-0 z-40 shadow-xl rounded-b-2xl">
           <div className="flex flex-col">
@@ -403,7 +469,7 @@ export default function SmartResize() {
             {/* Contact Link */}
             <Link 
               href="/contact" 
-              className="flex items-center gap=4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
+              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
               onClick={() => setMobileMenuOpen(false)}
             >
               <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
@@ -412,7 +478,7 @@ export default function SmartResize() {
               <span className="font-medium">Contact</span>
             </Link>
             
-            {/* Sign In Button with Icon Box */}
+            {/* Sign In Button */}
             <Link 
               href="/signin" 
               className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline"
@@ -427,13 +493,13 @@ export default function SmartResize() {
         </div>
       )}
 
-      {/* MAIN CONTENT - WITH REF TO PREVENT AUTO-SCROLL */}
-      <div ref={mainContentRef} className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-6 sm:py-8 md:py-12">
+      {/* MAIN CONTENT - FIXED HEIGHT ISSUE */}
+      <div ref={mainContentRef} className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 md:px-16 py-6 sm:py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
           
           {/* LEFT SIDE - TOOL INTERFACE */}
           <div className="space-y-6 sm:space-y-8">
-            {/* HERO SECTION - MOBILE CENTERED */}
+            {/* HERO SECTION */}
             <div className="space-y-3 sm:space-y-4 text-center md:text-left">
               <div className="inline-flex items-center justify-center md:justify-start gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-700 rounded-full font-medium text-sm sm:text-base">
                 <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center text-white">
@@ -450,7 +516,7 @@ export default function SmartResize() {
               </p>
             </div>
 
-            {/* UPLOAD BOX - CONDITIONAL RENDERING BASED ON VIEW MODE */}
+            {/* UPLOAD BOX */}
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8">
               {viewMode === 'upload' ? (
                 <div className="text-center p-4 sm:p-6">

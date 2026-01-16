@@ -29,6 +29,10 @@ export default function ProfessionalImageStudio() {
   const [fromTermsPrivacy, setFromTermsPrivacy] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Local image paths for comparison
+  const demoBeforeImage = "/demo-images/before.png.png";
+  const demoAfterImage = "/demo-images/after.png.png";
+
   // Detect mobile on mount
   useEffect(() => {
     const checkMobile = () => {
@@ -856,11 +860,11 @@ export default function ProfessionalImageStudio() {
                   </div>
                 </div>
                 
-                {/* SMALLER IMAGE CONTAINER FOR MOBILE */}
+                {/* SMALLER IMAGE CONTAINER FOR MOBILE - Now using local images */}
                 <div className="relative h-[180px] sm:h-[250px] md:h-[300px] lg:h-[350px] rounded-lg sm:rounded-xl overflow-hidden cursor-ew-resize">
                   <ImageComparisonSlider
-                    beforeImage="https://i.ibb.co/dwKsb3BC/medium-shot-woman-with-glasses-outdoors.jpg"
-                     afterImage="https://i.ibb.co/zH20Fww5/after-jpg.png"
+                    beforeImage={demoBeforeImage}
+                    afterImage={demoAfterImage}
                   />
                 </div>
               </div>
@@ -1084,7 +1088,7 @@ export default function ProfessionalImageStudio() {
   );
 }
 
-// Mobile-optimized ImageComparisonSlider component
+// Mobile-optimized ImageComparisonSlider component - Updated with local paths
 function ImageComparisonSlider({ beforeImage, afterImage }) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -1177,7 +1181,7 @@ function ImageComparisonSlider({ beforeImage, afterImage }) {
         <img 
           src={afterImage} 
           className="absolute inset-0 w-full h-full object-cover"
-          alt="After"
+          alt="After - Background removed"
         />
         <div className="absolute top-2 sm:top-3 right-2 sm:right-3 md:top-4 md:right-4 bg-blue-600/80 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1 rounded text-xs font-bold">
           AFTER
@@ -1195,7 +1199,7 @@ function ImageComparisonSlider({ beforeImage, afterImage }) {
             width: '100%',
             minWidth: '100%'
           }}
-          alt="Before"
+          alt="Before - Original image"
         />
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3 md:top-4 md:left-4 bg-black/70 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-3 md:py-1 rounded text-xs font-bold">
           BEFORE
@@ -1280,4 +1284,3 @@ if (typeof document !== 'undefined') {
   `;
   document.head.appendChild(styleSheet);
 }
-// update for vercel 123
