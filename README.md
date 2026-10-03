@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Enhance Me
+
+> A privacy-focused, browser-based image toolkit for everyday image processing.
+
+**Enhance Me** is a collection of client-side image tools built with **Next.js**, React, and modern browser APIs. The application is designed around local processing, allowing users to edit, resize, compress, convert, and clean image metadata without sending files to a remote server.
+
+## Features
+
+| Tool               | Description                                                                                                             |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| Background Removal | AI-powered background removal using `@imgly/background-removal`, with processing performed locally through WebAssembly. |
+| Smart Resize       | Resize images for web, social media, documents, and common passport/photo dimensions.                                   |
+| Smart Compress     | Reduce image file size while balancing compression and visual quality.                                                  |
+| Format Conversion  | Convert supported images and documents between common formats.                                                          |
+| Privacy Guard      | Remove EXIF metadata such as GPS location and camera information from supported images.                                 |
+
+## Tech Stack
+
+* **Framework:** [Next.js](https://nextjs.org/) — App Router
+* **UI:** React, [Tailwind CSS](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **Background Removal:** [`@imgly/background-removal`](https://www.npmjs.com/package/@imgly/background-removal)
+* **Document & File Processing:** `jspdf`, `mammoth`, `pdfjs-dist`, `docx`, `jszip`, `html2canvas`
+* **Deployment:** [Vercel](https://vercel.com/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+* Node.js 18+
+* npm, Yarn, or pnpm
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/professorharis/enhance-me.git
+cd enhance-me
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+Or use your preferred package manager:
+
+```bash
+yarn install
+# or
+pnpm install
+```
+
+### 3. Add background-removal assets
+
+Background removal uses self-hosted **WASM and ONNX model assets** rather than relying on a third-party CDN.
+
+Download and extract the project asset bundle into `public/bg-removal/`.
+
+Expected structure:
+
+```text
+public/
+└── bg-removal/
+    ├── onnxruntime-web/
+    ├── *.onnx
+    └── ...
+```
+
+### 4. Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+enhance-me/
+├── app/
+│   ├── page.tsx                # Home / Background Removal
+│   ├── resize/page.tsx         # Smart Resize
+│   ├── compress/page.tsx       # Smart Compress
+│   ├── convert/page.tsx        # Format Conversion
+│   ├── privacy/page.tsx        # Privacy Guard
+│   ├── about/page.tsx
+│   ├── contact/page.tsx
+│   ├── privacy-policy/page.tsx
+│   ├── terms/page.tsx
+│   └── faq/page.tsx
+├── public/
+│   ├── bg-removal/             # WASM and model assets
+│   └── demo-images/             # Demo / preview images
+├── package.json
+└── README.md
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Privacy by Design
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Enhance Me is designed for **client-side processing**:
 
-## Deploy on Vercel
+* Images are processed in the browser where supported by the selected tool.
+* Background removal runs locally using WebAssembly and model assets.
+* The application does not require user accounts for its core image-processing workflow.
+* Files are not intentionally uploaded to a backend for processing.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+> Privacy behavior can depend on the implementation of individual tools and any third-party services added to the project in the future.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Browser Support
+
+Modern versions of the following browsers are recommended:
+
+| Browser         | Support                       |
+| --------------- | ----------------------------- |
+| Chrome          | Latest                        |
+| Edge            | Latest                        |
+| Firefox         | Latest                        |
+| Safari          | 16+                           |
+| Mobile browsers | iOS / Android modern browsers |
+
+Background removal requires browser support for **WebAssembly** and compatible graphics/runtime capabilities.
+
+## Contributing
+
+Contributions, bug reports, and feature requests are welcome.
+
+1. Fork the repository.
+
+2. Create a feature branch:
+
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+
+3. Commit your changes:
+
+   ```bash
+   git commit -m "Add your feature"
+   ```
+
+4. Push the branch:
+
+   ```bash
+   git push origin feature/your-feature
+   ```
+
+5. Open a Pull Request.
+
+## License
+
+This project is intended to be released under the **MIT License**. Add the repository's `LICENSE` file before distributing the project.
+
+## Author
+
+**Muhammad Haris**
+Computer Science Student — Khyber Pakhtunkhwa, Pakistan
+
+* Email: [harishkm9899@gmail.com](mailto:harishkm9899@gmail.com)
+* GitHub: [@professorharis](https://github.com/professorharis)
+
+## Project Focus
+
+Enhance Me was built as a practical project to explore:
+
+* Client-side image processing
+* WebAssembly-based AI inference
+* File handling with browser APIs
+* Responsive UI development with Next.js and Tailwind CSS
+* Privacy-oriented web application design
+
+<p align="center">
+  Built by <strong>Muhammad Haris</strong>
+</p>

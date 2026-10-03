@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   FileText, Scale, Shield, CheckCircle2,
   ArrowLeft, Sparkles, AlertTriangle, Menu, X,
   Home, HelpCircle, MessageCircle, ChevronLeft
 } from 'lucide-react';
 import Link from 'next/link';
+import NextImage from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function TermsOfService() {
@@ -14,58 +15,38 @@ export default function TermsOfService() {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setHasHistory(window.history.length > 1);
-    }
+    if (typeof window !== 'undefined') setHasHistory(window.history.length > 1);
   }, []);
 
   const handleBackNavigation = (e) => {
     e.preventDefault();
-    
     if (typeof window !== 'undefined') {
-      if (hasHistory) {
-        router.back();
-      } else {
-        router.push('/');
-      }
+      if (hasHistory) router.back();
+      else router.push('/');
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-gray-900 font-sans">
-      
-      {/* MOBILE HEADER - Only shows on mobile */}
+
+      {/* MOBILE HEADER */}
       <div className="md:hidden h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-50">
-        {/* Left: Back Button */}
-        <button 
-          onClick={handleBackNavigation}
-          className="flex items-center gap-2 text-blue-600 font-medium text-sm"
-        >
+        <button onClick={handleBackNavigation} className="flex items-center gap-2 text-blue-600 font-medium text-sm">
           <ChevronLeft size={20} />
           <span>Back</span>
         </button>
-        
-        {/* Center: Page Title */}
         <span className="font-bold text-gray-900 text-sm">Terms</span>
-        
-        {/* Right: 3-line Menu Button */}
-        <button 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-1 text-gray-600"
-        >
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-1 text-gray-600">
           {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
-      {/* DESKTOP NAVBAR - Unchanged */}
+      {/* DESKTOP NAVBAR */}
       <nav className="hidden md:flex h-20 bg-white border-b border-gray-200 px-6 md:px-16 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center text-white">
-            <Sparkles size={22} />
-          </div>
+          <NextImage src="/logo.png" alt="Enhance Me Logo" width={40} height={40} className="rounded-xl object-contain" priority />
           <span className="text-2xl font-bold tracking-tight">Enhance Me</span>
         </div>
-
         <Link href="/" className="text-sm font-bold uppercase tracking-widest text-gray-500 hover:text-blue-600 transition-colors flex items-center gap-2">
           <ArrowLeft size={16} />
           Back to Tools
@@ -76,56 +57,27 @@ export default function TermsOfService() {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 px-4 py-4 absolute top-14 left-0 right-0 z-40 shadow-xl rounded-b-2xl">
           <div className="flex flex-col">
-            <Link 
-              href="/" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <Home size={18} />
-              </div>
+            <Link href="/" className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50" onClick={() => setMobileMenuOpen(false)}>
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center"><Home size={18} /></div>
               <span className="font-medium">Home</span>
             </Link>
-            
-             <Link 
-              href="/about" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <FileText size={18} />
-              </div>
+            <Link href="/about" className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50" onClick={() => setMobileMenuOpen(false)}>
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center"><FileText size={18} /></div>
               <span className="font-medium">About</span>
             </Link>
-
-            <Link 
-              href="/contact" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <MessageCircle size={18} />
-              </div>
+            <Link href="/contact" className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50" onClick={() => setMobileMenuOpen(false)}>
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center"><MessageCircle size={18} /></div>
               <span className="font-medium">Contact</span>
             </Link>
-            
-             <Link 
-              href="/privacy-policy" 
-              className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center">
-                <Shield size={18} />
-              </div>
+            <Link href="/privacy-policy" className="flex items-center gap-4 py-3 px-4 text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors no-underline border-b border-gray-50" onClick={() => setMobileMenuOpen(false)}>
+              <div className="w-10 h-10 bg-blue-50 text-blue-600 p-2 rounded-lg flex items-center justify-center"><Shield size={18} /></div>
               <span className="font-medium">Privacy</span>
             </Link>
-            
-            
           </div>
         </div>
       )}
 
-      {/* MAIN CONTENT - Adjusted padding for mobile */}
+      {/* MAIN CONTENT */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-16 py-8 sm:py-12">
         <div className="mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-50 text-blue-700 rounded-full font-medium text-sm sm:text-base mb-4 sm:mb-6">
@@ -142,7 +94,7 @@ export default function TermsOfService() {
 
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 md:p-8">
           <div className="space-y-6 sm:space-y-8">
-            
+
             <section>
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                 <FileText size={18} className="sm:size-6 text-blue-500 flex-shrink-0" />
@@ -189,7 +141,6 @@ export default function TermsOfService() {
                     You agree not to upload content that is illegal, infringing, or violates the rights of others.
                   </p>
                 </div>
-                
                 <div className="p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <h4 className="font-bold text-blue-700 text-sm sm:text-base mb-1 sm:mb-2">Legal Compliance</h4>
                   <p className="text-xs sm:text-sm text-blue-600">
@@ -208,7 +159,6 @@ export default function TermsOfService() {
                     You retain all rights to images you upload and process through our service.
                   </p>
                 </div>
-                
                 <div className="p-3 sm:p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-bold text-sm sm:text-base mb-1 sm:mb-2">Our Technology</h4>
                   <p className="text-xs sm:text-sm text-gray-600">
@@ -273,7 +223,6 @@ export default function TermsOfService() {
           </div>
         </div>
 
-        {/* BACK TO HOME - Mobile optimized */}
         <div className="mt-6 sm:mt-8">
           <Link href="/">
             <div className="bg-gradient-to-r from-gray-900 to-black text-white p-4 sm:p-6 rounded-xl sm:rounded-2xl hover:shadow-xl transition-all group">
@@ -291,26 +240,19 @@ export default function TermsOfService() {
         </div>
       </div>
 
-      {/* FOOTER - MOBILE OPTIMIZED */}
+      {/* FOOTER */}
       <footer className="bg-gray-900 text-white py-8 sm:py-12 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
-            {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <Link href="/" className="flex items-center gap-2 sm:gap-3 no-underline">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Sparkles size={18} className="sm:size-[22px]" />
-                  </div>
+                  <NextImage src="/logo.png" alt="Enhance Me Logo" width={40} height={40} className="rounded-xl object-contain" loading="lazy" />
                   <span className="text-xl sm:text-2xl font-bold">Enhance Me</span>
                 </Link>
               </div>
-              <p className="text-gray-400 text-xs sm:text-sm">
-                Simple and Fast Image Tool
-              </p>
+              <p className="text-gray-400 text-xs sm:text-sm">Simple and Fast Image Tool</p>
             </div>
-
-            {/* Company Links */}
             <div>
               <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">Company</h4>
               <div className="flex flex-col gap-1.5 sm:gap-2">
@@ -321,8 +263,6 @@ export default function TermsOfService() {
                 <Link href="/faq" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">FAQ</Link>
               </div>
             </div>
-
-            {/* Popular Tools */}
             <div>
               <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">Popular Tools</h4>
               <div className="flex flex-col gap-1.5 sm:gap-2">
@@ -331,8 +271,6 @@ export default function TermsOfService() {
                 <Link href="/convert" className="text-gray-400 hover:text-white transition-colors no-underline text-xs sm:text-sm">Format Engine</Link>
               </div>
             </div>
-
-            {/* More Tools */}
             <div className="col-span-2 md:col-span-1">
               <h4 className="text-white font-bold mb-3 text-sm sm:text-lg">More Tools</h4>
               <div className="flex flex-col gap-1.5 sm:gap-2">
@@ -341,15 +279,9 @@ export default function TermsOfService() {
               </div>
             </div>
           </div>
-
-          {/* Footer Bottom */}
           <div className="border-t border-gray-800 pt-6 sm:pt-8 text-center">
-            <p className="text-gray-500 text-xs sm:text-sm">
-              All rights reserved. Enhance Me © {new Date().getFullYear()}
-            </p>
-            <p className="text-gray-600 text-xs mt-1 sm:mt-2">
-              AI-powered image processing platform
-            </p>
+            <p className="text-gray-500 text-xs sm:text-sm">All rights reserved. Enhance Me © {new Date().getFullYear()}</p>
+            <p className="text-gray-600 text-xs mt-1 sm:mt-2">AI-powered image processing platform</p>
           </div>
         </div>
       </footer>
